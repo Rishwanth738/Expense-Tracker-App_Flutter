@@ -1,0 +1,2 @@
+C:/Users/rishw/expense_manager/expense_manager/android/app/.cxx/RelWithDebInfo/1s6pd3p6/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/rishw/expense_manager/expense_manager/android/app/.cxx/RelWithDebInfo/1s6pd3p6/armeabi-v7a/CMakeFiles/rebuild_cache.dir
