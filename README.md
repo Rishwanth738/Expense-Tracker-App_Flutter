@@ -45,6 +45,8 @@ flutter build apk --release
 ```
 The APK will be located at `build/app/outputs/flutter-apk/app-release.apk`.
 
+You can also find mine here at: https://drive.google.com/file/d/1kfsKtQ-n_ThDKPYZ0VlQdvlF6NvCJmdi/view?usp=sharing
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
