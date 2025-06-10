@@ -186,18 +186,31 @@ class _HomeScreenState extends State<HomeScreen>
                   itemCount: entry.value.length,
                   itemBuilder: (context, index) {
                     Expense expense = entry.value[index];
-                    return ListTile(
-                      leading: Icon(Icons.monetization_on, 
-                          color: Theme.of(context).colorScheme.primary),
-                      title: Text(
-                          "${expense.payee} - ₹${expense.amount.toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.primary,
-                          )),
-                      subtitle: Text(DateFormat('MMM dd, yyyy')
-                          .format(expense.date),
-                          style: TextStyle(color: Colors.grey[600])),
+                    return Dismissible(
+                      key: Key(expense.id),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        provider.removeExpense(expense.id);
+                      },
+                      background: Container(
+                        color: Colors.red,
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        alignment: Alignment.centerRight,
+                        child: Icon(Icons.delete, color: Colors.white),
+                      ),
+                      child: ListTile(
+                        leading: Icon(Icons.monetization_on, 
+                            color: Theme.of(context).colorScheme.primary),
+                        title: Text(
+                            "${expense.payee} - ₹${expense.amount.toStringAsFixed(2)}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).colorScheme.primary,
+                            )),
+                        subtitle: Text(DateFormat('MMM dd, yyyy')
+                            .format(expense.date),
+                            style: TextStyle(color: Colors.grey[600])),
+                      ),
                     );
                   },
                 ),

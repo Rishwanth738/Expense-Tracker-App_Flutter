@@ -2,11 +2,11 @@ import 'package:flutter/foundation.dart';
 import '../models/expense.dart';
 import '../models/expense_category.dart';
 import '../models/tag.dart';
-import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class ExpenseProvider with ChangeNotifier {
-  final LocalStorage storage;
+  final SharedPreferences prefs;
   // List of expenses
   List<Expense> _expenses = [];
 
@@ -43,17 +43,15 @@ class ExpenseProvider with ChangeNotifier {
   List<ExpenseCategory> get categories => _categories;
   List<Tag> get tags => _tags;
 
-  ExpenseProvider(this.storage) {
+  ExpenseProvider(this.prefs) {
     _loadExpensesFromStorage();
   }
 
-  void _loadExpensesFromStorage() async {
-    
-    var storedExpenses = storage.getItem('expenses');
+  void _loadExpensesFromStorage() {
+    final String? storedExpenses = prefs.getString('expenses');
     if (storedExpenses != null) {
-      _expenses = List<Expense>.from(
-        (storedExpenses as List).map((item) => Expense.fromJson(item)),
-      );
+      final List<dynamic> decoded = jsonDecode(storedExpenses);
+      _expenses = decoded.map((item) => Expense.fromJson(item)).toList();
       notifyListeners();
     }
   }
@@ -66,8 +64,8 @@ class ExpenseProvider with ChangeNotifier {
   }
 
   void _saveExpensesToStorage() {
-    storage.setItem(
-        'expenses', jsonEncode(_expenses.map((e) => e.toJson()).toList()));
+    final String encoded = jsonEncode(_expenses.map((e) => e.toJson()).toList());
+    prefs.setString('expenses', encoded);
   }
 
   void addOrUpdateExpense(Expense expense) {
@@ -79,14 +77,14 @@ class ExpenseProvider with ChangeNotifier {
       // Add new expense
       _expenses.add(expense);
     }
-    _saveExpensesToStorage(); // Save the updated list to local storage
+    _saveExpensesToStorage();
     notifyListeners();
   }
 
   // Delete an expense
   void deleteExpense(String id) {
     _expenses.removeWhere((expense) => expense.id == id);
-    _saveExpensesToStorage(); // Save the updated list to local storage
+    _saveExpensesToStorage();
     notifyListeners();
   }
 
@@ -120,7 +118,7 @@ class ExpenseProvider with ChangeNotifier {
 
   void removeExpense(String id) {
     _expenses.removeWhere((expense) => expense.id == id);
-    _saveExpensesToStorage(); // Save the updated list to local storage
+    _saveExpensesToStorage();
     notifyListeners();
   }
 }

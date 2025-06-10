@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/expense_provider.dart';
@@ -9,21 +9,21 @@ import 'screens/tag_management_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initLocalStorage();
+  final prefs = await SharedPreferences.getInstance();
 
-  runApp(MyApp(localStorage: localStorage));
+  runApp(MyApp(prefs: prefs));
 }
 
 class MyApp extends StatelessWidget {
-  final LocalStorage localStorage;
+  final SharedPreferences prefs;
 
-  const MyApp({Key? key, required this.localStorage}) : super(key: key);
+  const MyApp({Key? key, required this.prefs}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ExpenseProvider(localStorage)),
+        ChangeNotifierProvider(create: (_) => ExpenseProvider(prefs)),
       ],
       child: MaterialApp(
         title: 'Expense Tracker',
